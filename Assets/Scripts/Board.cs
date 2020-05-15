@@ -1,57 +1,50 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
-    public GameObject cellPrefab;
-    public Color white = new Color(0.95f, 0.96f, 0.8f);
-    public Color black = new Color(0.1f, 0.4f, 0.2f);
+    [SerializeField]
+    GameObject _cellPrefab = null;
+    Cell[,] _cells;
+    const int WIDTH = 8;
 
-    private static readonly int boardWidth = 8;
-
-    public Cell[,] cells;
+    public Cell GetCell(int x, int y)
+    {
+        if (x < 0 || x >= WIDTH || y < 0 || y >= WIDTH)
+        {
+            return null;
+        }
+        return _cells[x, y];
+    }
 
     public void Setup()
     {
-        cells = new Cell[boardWidth, boardWidth];
+        _cells = new Cell[WIDTH, WIDTH];
 
-        var size = cellPrefab.GetComponent<RectTransform>().rect.width;
-
-        for (int i = 0; i < boardWidth; i++)
+        for (int x = 0; x < WIDTH; x++)
         {
-            for (int j = 0; j < boardWidth; j++)
+            for (int y = 0; y < WIDTH; y++)
             {
-                var cellGameObject = Instantiate<GameObject>(cellPrefab, transform);
-                cellGameObject.transform.SetAsFirstSibling();
-                cellGameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2((i + 0.5f) * size, (j + 0.5f) * size);
-                if ((i + j) % 2 == 1)
-                {
-                    cellGameObject.GetComponent<Image>().color = white;
-                }
-                else
-                {
-                    cellGameObject.GetComponent<Image>().color = black;
-                }
+                var cellGameObject = Instantiate<GameObject>(_cellPrefab, transform);
+                cellGameObject.transform.position += new Vector3(x - WIDTH / 2 + 0.5f, y - WIDTH / 2 + 0.5f);
+
                 var cell = cellGameObject.GetComponent<Cell>();
-                cell.Rank = i;
-                cell.File = j;
-                cells[i, j] = cell;
+                cell.Setup(x, y);
+
+                _cells[x, y] = cell;
             }
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDrawGizmos()
     {
-
-    }
-
-    public Cell GetCell(int rank, int file)
-    {
-        if (rank < 0 || rank >= boardWidth || file < 0 || file >= boardWidth)
+        // Draw a chessboard preview in the editor.
+        for (int x = -WIDTH / 2; x < WIDTH / 2; x++)
         {
-            return null;
+            for (int y = -WIDTH / 2; y < WIDTH / 2; y++)
+            {
+                Gizmos.color = ((x ^ y) & 1) == 1 ? Color.white : Color.black;
+                Gizmos.DrawCube(transform.position + new Vector3(x + 0.5f, y + 0.5f, 0), new Vector3(1, 1, 0));
+            }
         }
-        return cells[rank, file];
     }
 }

@@ -1,54 +1,132 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-public abstract class Piece : EventTrigger
+public abstract class Piece : MonoBehaviour
 {
-    public bool team;
-    private Vector3 originalPosition;
-    private Cell originalCell;
-
-    public override void OnPointerDown(PointerEventData eventData)
-    {
-        originalPosition = transform.position;
-    }
-    public override void OnDrag(PointerEventData eventData)
-    {
-        transform.position += (Vector3)eventData.delta;
-    }
-    public override void OnPointerUp(PointerEventData eventData)
-    {
-        var board = FindObjectOfType<Board>();
-        foreach (var move in MoveSet())
-        {
-            var cell = board.GetCell(originalCell.Rank + move.x, originalCell.File + move.y);
-            if (cell != null && RectTransformUtility.RectangleContainsScreenPoint(cell.GetComponent<RectTransform>(), Input.mousePosition))
-            {
-                Place(cell);
-                return;
-            }
-        }
-
-        transform.position = originalPosition;
-    }
-
-    protected abstract Vector2Int[] MoveSet();
-
-    protected abstract string PieceType();
+    Cell _cell;
+    bool _isDragging;
+    Vector3 _grabOffset;
 
     public void Place(Cell cell)
     {
-        if (originalCell != null)
-        {
-            originalCell.piece = null;
-        }
-        transform.position = cell.transform.position;
-        originalCell = cell;
-        cell.piece = this;
+        transform.position = cell.transform.position + new Vector3(0, 0, -1);
+        _cell = cell;
     }
 
-    public void Start()
+    protected abstract string SpriteName { get; }
+
+    protected abstract Vector2Int[] MoveSet();
+
+    // Start is called before the first frame update
+    void Start()
     {
-        GetComponent<Image>().sprite = Resources.Load<Sprite>(PieceType());
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(SpriteName);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && IsMouseOverPieceCell())
+        {
+            BeginDrag();
+        }
+
+        if (_isDragging)
+        {
+            OnDrag();
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                EndDrag();
+            }
+        }
+    }
+
+    void BeginDrag()
+    {
+        _isDragging = true;
+        _grabOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Cursor.visible = false;
+    }
+
+    void EndDrag()
+    {
+        _isDragging = false;
+        Cursor.visible = true;
+
+        var targetCell = FindCellUnderPiece();
+
+        if (CanPlace(targetCell))
+        {
+            Place(targetCell);
+        }
+        else
+        {
+            Place(_cell);
+        }
+    }
+
+    void OnDrag()
+    {
+        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        transform.position = new Vector3(mousePos.x + _grabOffset.x, mousePos.y + _grabOffset.y, transform.position.z);
+    }
+
+    bool IsMouseOverPieceCell()
+    {
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray);
+
+        if (hits.Length > 0)
+        {
+            var collider = _cell.GetComponent<Collider>();
+            foreach (var hit in hits)
+            {
+                if (hit.collider == collider)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    Cell FindCellUnderPiece()
+    {
+        var hits = Physics.RaycastAll(transform.position, Vector3.forward);
+        var cells = FindObjectsOfType<Cell>();
+
+        foreach (var cell in cells)
+        {
+            var collider = cell.GetComponent<Collider>();
+
+            foreach (var hit in hits)
+            {
+                if (hit.collider == collider)
+                {
+                    return cell;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    bool CanPlace(Cell cell)
+    {
+        if (cell == null)
+        {
+            return false;
+        }
+
+        foreach (var move in MoveSet())
+        {
+            if (_cell.x + move.x == cell.x && _cell.y + move.y == cell.y)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
