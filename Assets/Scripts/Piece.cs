@@ -9,7 +9,12 @@ public abstract class Piece : MonoBehaviour
     public void Place(Cell cell)
     {
         transform.position = cell.transform.position + new Vector3(0, 0, -1);
+        if (_cell)
+        {
+            _cell.piece = null;
+        }
         _cell = cell;
+        cell.piece = this;
     }
 
     protected abstract string SpriteName { get; }
@@ -45,6 +50,7 @@ public abstract class Piece : MonoBehaviour
     {
         _isDragging = true;
         _grabOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        transform.position += new Vector3(0, 0, -1);
         Cursor.visible = false;
     }
 
@@ -123,7 +129,15 @@ public abstract class Piece : MonoBehaviour
         {
             if (_cell.x + move.x == cell.x && _cell.y + move.y == cell.y)
             {
-                return true;
+                //return true;
+                if (cell.piece == null)
+                {
+                    return true;
+                }
+                if (cell.piece.GetComponent<SpriteRenderer>().color != GetComponent<SpriteRenderer>().color)
+                {
+                    return true;
+                }
             }
         }
 

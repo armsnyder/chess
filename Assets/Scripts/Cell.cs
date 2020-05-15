@@ -7,6 +7,7 @@ public class Cell : MonoBehaviour
     int _x, _y;
     public int x { get { return _x; } }
     public int y { get { return _y; } }
+    public Piece piece;
 
     public void Setup(int x, int y)
     {
