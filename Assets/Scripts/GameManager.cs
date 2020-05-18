@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
                 GameOver(!whoseTurn);
             }
         }
+        // whoseTurn ^= true;  // debug
     }
 
     public void Reset()
@@ -66,7 +67,7 @@ public class GameManager : MonoBehaviour
 
     bool IsGameOver() {
         foreach (var p in FindObjectsOfType<Piece>()) {
-            if (p.team == whoseTurn && p.HasMoves()) {
+            if (p.team == whoseTurn && p.HasMoves() && p.enabled) {
                 return false;
             }
         }
