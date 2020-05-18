@@ -6,12 +6,12 @@ public abstract class Piece : MonoBehaviour
     Cell _cell;
     bool _isDragging;
     Vector3 _grabOffset;
-    bool team;
-    List<Cell> curPotentialMoves;
+    bool _team;
+    List<Cell> _curPotentialMoves;
 
     public void Setup(bool team)
     {
-        this.team = team;
+        this._team = team;
         GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>((team ? "White" : "Black") + SpriteName);
     }
 
@@ -55,7 +55,7 @@ public abstract class Piece : MonoBehaviour
         _grabOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.position += new Vector3(0, 0, -1);
         Cursor.visible = false;
-        curPotentialMoves = ValidMoves();
+        _curPotentialMoves = ValidMoves();
     }
 
     void EndDrag()
@@ -124,11 +124,7 @@ public abstract class Piece : MonoBehaviour
 
     bool CanPlace(Cell cell)
     {
-        // if (cell == null)
-        // {
-        //     return false;
-        // }
-        return curPotentialMoves.Contains(cell);
+        return _curPotentialMoves.Contains(cell);
     }
 
     List<Cell> ValidMoves()
@@ -147,7 +143,7 @@ public abstract class Piece : MonoBehaviour
                 {
                     result.Add(potentialMove);
                 }
-                else if (potentialMove.piece.team == team)
+                else if (potentialMove.piece._team == _team)
                 {
                     break;
                 }
