@@ -143,7 +143,7 @@ public abstract class Piece : MonoBehaviour
     List<Cell> ValidMoves()
     {
         var result = new List<Cell>();
-        var board = FindObjectOfType<Board>();  
+        var board = FindObjectOfType<Board>();
         foreach (var move in MoveSet)
         {
             if ((move.z & SPECIAL) == SPECIAL && _hasMoved)
@@ -162,7 +162,8 @@ public abstract class Piece : MonoBehaviour
                 if (potentialCell.piece == null)
                 // no piece on target cell
                 {
-                    if ((move.z & SPECIAL) == SPECIAL && board.GetCell(_cell.x + (move.x / 2), _cell.y + (move.y / 2 * reverse)).piece) {
+                    if ((move.z & SPECIAL) == SPECIAL && board.GetCell(_cell.x + (move.x / 2), _cell.y + (move.y / 2 * reverse)).piece)
+                    {
                         break;
                     }
                     if ((move.z & MOVE) == MOVE)
