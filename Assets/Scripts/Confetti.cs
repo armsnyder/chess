@@ -5,16 +5,19 @@ using UnityEngine;
 public class Confetti : MonoBehaviour
 {
     [SerializeField]
-    GameObject _confettPrefab;
-    void OnGameOver(bool team){
+    GameObject _confettPrefab = null;
+    void OnGameOver(bool team)
+    {
         Instantiate<GameObject>(_confettPrefab, transform);
     }
 
-    void OnEnable(){
+    void OnEnable()
+    {
         GameManager.GameOver += OnGameOver;
     }
 
-    void OnDisable(){
+    void OnDisable()
+    {
         GameManager.GameOver -= OnGameOver;
     }
 }
