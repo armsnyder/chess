@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,19 +13,37 @@ public class GameManager : MonoBehaviour
         var board = FindObjectOfType<Board>();
         board.Setup();
 
+        CreateAndPlacePieces();
+    }
+
+    void CreateAndPlacePieces()
+    {
+        var board = FindObjectOfType<Board>();
+        var firstRow = new Type[] { typeof(Rook), typeof(Knight), typeof(Bishop), typeof(Queen), typeof(King), typeof(Bishop), typeof(Knight), typeof(Rook) };
+        for (int i = 0; i < firstRow.Length; i++)
+        {
+            CreateAndPlacePiece(firstRow[i], true, board.GetCell(i, 0));
+        }
+        for (int i = 0; i < Board.WIDTH; i++)
+        {
+            CreateAndPlacePiece(typeof(Pawn), true, board.GetCell(i, 1));
+        }
+
+        for (int i = 0; i < firstRow.Length; i++)
+        {
+            CreateAndPlacePiece(firstRow[i], false, board.GetCell(i, Board.WIDTH - 1));
+        }
+        for (int i = 0; i < Board.WIDTH; i++)
+        {
+            CreateAndPlacePiece(typeof(Pawn), false, board.GetCell(i, Board.WIDTH - 2));
+        }
+    }
+
+    void CreateAndPlacePiece(Type type, bool team, Cell cell)
+    {
         var piece = Instantiate<GameObject>(_piecePrefab);
-        piece.AddComponent<King>();
-        piece.GetComponent<Piece>().Setup(true);
-        piece.GetComponent<Piece>().Place(board.GetCell(4, 0));
-
-        piece = Instantiate<GameObject>(_piecePrefab);
-        piece.AddComponent<Rook>();
-        piece.GetComponent<Piece>().Setup(true);
-        piece.GetComponent<Piece>().Place(board.GetCell(3, 0));
-
-        piece = Instantiate<GameObject>(_piecePrefab);
-        piece.AddComponent<King>();
-        piece.GetComponent<Piece>().Setup(false);
-        piece.GetComponent<Piece>().Place(board.GetCell(4, 7));
+        piece.AddComponent(type);
+        (piece.GetComponent(type) as Piece).Setup(team);
+        (piece.GetComponent(type) as Piece).Place(cell);
     }
 }

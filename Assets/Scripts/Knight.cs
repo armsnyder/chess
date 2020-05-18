@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Knight : Piece
 {
@@ -11,14 +9,14 @@ public class Knight : Piece
         get
         {
             return new Vector3Int[] {
-                    new Vector3Int(-1, 2, 1),
-                    new Vector3Int(-1, -2, 1),
-                    new Vector3Int(1, 2, 1),
-                    new Vector3Int(1, -2, 1),
-                    new Vector3Int(2, 1, 1),
-                    new Vector3Int(2, -1, 1),
-                    new Vector3Int(-2, 1, 1),
-                    new Vector3Int(-2, -1, 1)
+                    new Vector3Int(-1, 2, MOVE|CAPTURE),
+                    new Vector3Int(-1, -2, MOVE|CAPTURE),
+                    new Vector3Int(1, 2, MOVE|CAPTURE),
+                    new Vector3Int(1, -2, MOVE|CAPTURE),
+                    new Vector3Int(2, 1, MOVE|CAPTURE),
+                    new Vector3Int(2, -1, MOVE|CAPTURE),
+                    new Vector3Int(-2, 1, MOVE|CAPTURE),
+                    new Vector3Int(-2, -1, MOVE|CAPTURE)
             };
         }
     }

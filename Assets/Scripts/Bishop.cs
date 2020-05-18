@@ -9,10 +9,10 @@ public class Bishop : Piece
         get
         {
             return new Vector3Int[] {
-                    new Vector3Int(-1, -1, -1),
-                    new Vector3Int(-1, 1, -1),
-                    new Vector3Int(1, 1, -1),
-                    new Vector3Int(1, -1, -1)
+                    new Vector3Int(-1, -1, MOVE|CAPTURE|RANGE),
+                    new Vector3Int(-1, 1, MOVE|CAPTURE|RANGE),
+                    new Vector3Int(1, 1, MOVE|CAPTURE|RANGE),
+                    new Vector3Int(1, -1, MOVE|CAPTURE|RANGE)
             };
         }
     }

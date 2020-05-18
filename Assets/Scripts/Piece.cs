@@ -9,6 +9,11 @@ public abstract class Piece : MonoBehaviour
     bool _team;
     List<Cell> _curPotentialMoves;
 
+    protected const int MOVE = 1;
+    protected const int CAPTURE = 1 << 1;
+    protected const int RANGE = 1 << 2;
+    protected const int FIRST_ONLY = 1 << 3;
+
     public void Setup(bool team)
     {
         this._team = team;
@@ -132,7 +137,7 @@ public abstract class Piece : MonoBehaviour
         var result = new List<Cell>();
         foreach (var move in MoveSet)
         {
-            for (int i = 1; i == 1 || move.z == -1; i++)
+            for (int i = 1; i == 1 || (move.z & RANGE) == RANGE; i++)
             {
                 Cell potentialMove = FindObjectOfType<Board>().GetCell(_cell.x + (i * move.x), _cell.y + (i * move.y));
                 if (potentialMove == null)
@@ -141,7 +146,10 @@ public abstract class Piece : MonoBehaviour
                 }
                 if (potentialMove.piece == null)
                 {
-                    result.Add(potentialMove);
+                    if ((move.z & MOVE) == MOVE)
+                    {
+                        result.Add(potentialMove);
+                    }
                 }
                 else if (potentialMove.piece._team == _team)
                 {
@@ -149,7 +157,10 @@ public abstract class Piece : MonoBehaviour
                 }
                 else
                 {
-                    result.Add(potentialMove);
+                    if ((move.z & CAPTURE) == CAPTURE)
+                    {
+                        result.Add(potentialMove);
+                    }
                     break;
                 }
             }
