@@ -8,11 +8,13 @@ public abstract class Piece : MonoBehaviour
     Vector3 _grabOffset;
     bool _team;
     List<Cell> _curPotentialMoves;
+    bool _hasMoved;
 
     protected const int MOVE = 1;
     protected const int CAPTURE = 1 << 1;
     protected const int RANGE = 1 << 2;
-    protected const int FIRST_ONLY = 1 << 3;
+    protected const int SPECIAL = 1 << 3;
+
 
     public void Setup(bool team)
     {
@@ -26,6 +28,12 @@ public abstract class Piece : MonoBehaviour
         if (_cell)
         {
             _cell.piece = null;
+            _hasMoved = true;
+        }
+        if (cell.piece)
+        {
+            // capture piece
+            Destroy(cell.piece.gameObject);
         }
         _cell = cell;
         cell.piece = this;
@@ -135,24 +143,35 @@ public abstract class Piece : MonoBehaviour
     List<Cell> ValidMoves()
     {
         var result = new List<Cell>();
+        var board = FindObjectOfType<Board>();  
         foreach (var move in MoveSet)
         {
+            if ((move.z & SPECIAL) == SPECIAL && _hasMoved)
+            {
+                continue;
+            }
             for (int i = 1; i == 1 || (move.z & RANGE) == RANGE; i++)
             {
                 int reverse = _team ? 1 : -1;
-                Cell potentialMove = FindObjectOfType<Board>().GetCell(_cell.x + (i * move.x), _cell.y + (i * move.y * reverse));
-                if (potentialMove == null)
+                Cell potentialCell = board.GetCell(_cell.x + (i * move.x), _cell.y + (i * move.y * reverse));
+                if (potentialCell == null)
+                // edge of the board
                 {
                     break;
                 }
-                if (potentialMove.piece == null)
+                if (potentialCell.piece == null)
+                // no piece on target cell
                 {
+                    if ((move.z & SPECIAL) == SPECIAL && board.GetCell(_cell.x + (move.x / 2), _cell.y + (move.y / 2 * reverse)).piece) {
+                        break;
+                    }
                     if ((move.z & MOVE) == MOVE)
                     {
-                        result.Add(potentialMove);
+                        result.Add(potentialCell);
                     }
                 }
-                else if (potentialMove.piece._team == _team)
+                else if (potentialCell.piece._team == _team)
+                // same team piece on target cell
                 {
                     break;
                 }
@@ -160,7 +179,7 @@ public abstract class Piece : MonoBehaviour
                 {
                     if ((move.z & CAPTURE) == CAPTURE)
                     {
-                        result.Add(potentialMove);
+                        result.Add(potentialCell);
                     }
                     break;
                 }
