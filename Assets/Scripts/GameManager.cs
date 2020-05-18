@@ -7,6 +7,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject _piecePrefab = null;
 
+    public void Reset() {
+        foreach (var piece in FindObjectsOfType<Piece>()) { 
+            Destroy(piece.gameObject);
+        }
+        CreateAndPlacePieces();
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
