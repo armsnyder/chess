@@ -11,9 +11,8 @@ public abstract class Piece : MonoBehaviour
 
     public void Setup(bool team)
     {
-        GetComponent<SpriteRenderer>().color = (team) ? Color.white : Color.black;
         this.team = team;
-        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(SpriteName);
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>((team ? "White" : "Black") + SpriteName);
     }
 
     public void Place(Cell cell)
