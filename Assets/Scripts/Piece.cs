@@ -139,7 +139,8 @@ public abstract class Piece : MonoBehaviour
         {
             for (int i = 1; i == 1 || (move.z & RANGE) == RANGE; i++)
             {
-                Cell potentialMove = FindObjectOfType<Board>().GetCell(_cell.x + (i * move.x), _cell.y + (i * move.y));
+                int reverse = _team ? 1 : -1;
+                Cell potentialMove = FindObjectOfType<Board>().GetCell(_cell.x + (i * move.x), _cell.y + (i * move.y * reverse));
                 if (potentialMove == null)
                 {
                     break;
