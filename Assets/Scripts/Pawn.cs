@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pawn : MonoBehaviour
+public class Pawn : Piece
 {
     protected override string SpriteName { get { return "King"; } }
 
