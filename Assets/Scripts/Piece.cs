@@ -39,7 +39,8 @@ public abstract class Piece : MonoBehaviour
         cell.piece = this;
     }
 
-    public bool HasMoves() {
+    public bool HasMoves()
+    {
         return ValidMoves().Count > 0;
     }
     protected abstract string SpriteName { get; }
@@ -67,7 +68,8 @@ public abstract class Piece : MonoBehaviour
 
     void BeginDrag()
     {
-        if (_team == FindObjectOfType<GameManager>().whoseTurn) {
+        if (_team == FindObjectOfType<GameManager>().whoseTurn)
+        {
             _isDragging = true;
             _grabOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position += new Vector3(0, 0, -1);
