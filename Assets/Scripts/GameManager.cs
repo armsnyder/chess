@@ -11,20 +11,19 @@ public class GameManager : MonoBehaviour
         var board = FindObjectOfType<Board>();
         board.Setup();
 
-        var wk = Instantiate<GameObject>(_piecePrefab);
-        wk.AddComponent<King>();
-        wk.GetComponent<SpriteRenderer>().color = Color.white;
-        wk.GetComponent<Piece>().Place(board.GetCell(4, 0));
-        // TODO piece.setup() to set own color and team etc.
+        var piece = Instantiate<GameObject>(_piecePrefab);
+        piece.AddComponent<King>();
+        piece.GetComponent<Piece>().Setup(true);
+        piece.GetComponent<Piece>().Place(board.GetCell(4, 0));
 
-        var wq = Instantiate<GameObject>(_piecePrefab);
-        wq.AddComponent<King>();
-        wq.GetComponent<SpriteRenderer>().color = Color.white;
-        wq.GetComponent<Piece>().Place(board.GetCell(3, 0));
+        piece = Instantiate<GameObject>(_piecePrefab);
+        piece.AddComponent<Rook>();
+        piece.GetComponent<Piece>().Setup(true);
+        piece.GetComponent<Piece>().Place(board.GetCell(3, 0));
 
-        var bk = Instantiate<GameObject>(_piecePrefab);
-        bk.AddComponent<King>();
-        bk.GetComponent<SpriteRenderer>().color = Color.black;
-        bk.GetComponent<Piece>().Place(board.GetCell(4, 7));
+        piece = Instantiate<GameObject>(_piecePrefab);
+        piece.AddComponent<King>();
+        piece.GetComponent<Piece>().Setup(false);
+        piece.GetComponent<Piece>().Place(board.GetCell(4, 7));
     }
 }

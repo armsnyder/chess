@@ -5,7 +5,7 @@ public class Board : MonoBehaviour
     [SerializeField]
     GameObject _cellPrefab = null;
     Cell[,] _cells;
-    const int WIDTH = 8;
+    public const int WIDTH = 8;
 
     public Cell GetCell(int x, int y)
     {

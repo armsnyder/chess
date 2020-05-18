@@ -1,10 +1,20 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class Piece : MonoBehaviour
 {
     Cell _cell;
     bool _isDragging;
     Vector3 _grabOffset;
+    bool team;
+    List<Cell> curPotentialMoves;
+
+    public void Setup(bool team)
+    {
+        GetComponent<SpriteRenderer>().color = (team) ? Color.white : Color.black;
+        this.team = team;
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(SpriteName);
+    }
 
     public void Place(Cell cell)
     {
@@ -19,13 +29,7 @@ public abstract class Piece : MonoBehaviour
 
     protected abstract string SpriteName { get; }
 
-    protected abstract Vector2Int[] MoveSet();
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(SpriteName);
-    }
+    protected abstract Vector3Int[] MoveSet { get; }
 
     // Update is called once per frame
     void Update()
@@ -52,6 +56,7 @@ public abstract class Piece : MonoBehaviour
         _grabOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.position += new Vector3(0, 0, -1);
         Cursor.visible = false;
+        curPotentialMoves = ValidMoves();
     }
 
     void EndDrag()
@@ -120,27 +125,40 @@ public abstract class Piece : MonoBehaviour
 
     bool CanPlace(Cell cell)
     {
-        if (cell == null)
-        {
-            return false;
-        }
+        // if (cell == null)
+        // {
+        //     return false;
+        // }
+        return curPotentialMoves.Contains(cell);
+    }
 
-        foreach (var move in MoveSet())
+    List<Cell> ValidMoves()
+    {
+        var result = new List<Cell>();
+        foreach (var move in MoveSet)
         {
-            if (_cell.x + move.x == cell.x && _cell.y + move.y == cell.y)
+            for (int i = 1; i == 1 || move.z == -1; i++)
             {
-                //return true;
-                if (cell.piece == null)
+                Cell potentialMove = FindObjectOfType<Board>().GetCell(_cell.x + (i * move.x), _cell.y + (i * move.y));
+                if (potentialMove == null)
                 {
-                    return true;
+                    break;
                 }
-                if (cell.piece.GetComponent<SpriteRenderer>().color != GetComponent<SpriteRenderer>().color)
+                if (potentialMove.piece == null)
                 {
-                    return true;
+                    result.Add(potentialMove);
+                }
+                else if (potentialMove.piece.team == team)
+                {
+                    break;
+                }
+                else
+                {
+                    result.Add(potentialMove);
+                    break;
                 }
             }
         }
-
-        return false;
+        return result;
     }
 }
