@@ -7,6 +7,7 @@ public abstract class Piece : MonoBehaviour
     bool _isDragging;
     Vector3 _grabOffset;
     bool _team;
+    public bool team { get { return _team; } }
     List<Cell> _curPotentialMoves;
     bool _hasMoved;
 
@@ -38,6 +39,9 @@ public abstract class Piece : MonoBehaviour
         cell.piece = this;
     }
 
+    public bool HasMoves() {
+        return ValidMoves().Count > 0;
+    }
     protected abstract string SpriteName { get; }
 
     protected abstract Vector3Int[] MoveSet { get; }
@@ -83,7 +87,7 @@ public abstract class Piece : MonoBehaviour
         {
             Place(targetCell);
             _hasMoved = true;
-            FindObjectOfType<GameManager>().whoseTurn ^= true;
+            FindObjectOfType<GameManager>().NextTurn();
         }
         else
         {

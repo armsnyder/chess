@@ -8,6 +8,17 @@ public class GameManager : MonoBehaviour
 
     public bool whoseTurn;
 
+    public static event Action<bool> GameOver;
+
+    public void NextTurn() {
+        whoseTurn ^= true;
+        if (IsGameOver()) {
+            if (GameOver != null) {
+                GameOver(!whoseTurn);
+            }
+        }
+    }
+
     public void Reset()
     {
         foreach (var piece in FindObjectsOfType<Piece>())
@@ -51,5 +62,14 @@ public class GameManager : MonoBehaviour
         board.Setup();
 
         Reset();
+    }
+
+    bool IsGameOver() {
+        foreach (var p in FindObjectsOfType<Piece>()) {
+            if (p.team == whoseTurn && p.HasMoves()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
