@@ -6,26 +6,14 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject _piecePrefab = null;
 
+    public bool whoseTurn;
+
     public void Reset()
     {
         foreach (var piece in FindObjectsOfType<Piece>())
         {
             Destroy(piece.gameObject);
         }
-        CreateAndPlacePieces();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        var board = FindObjectOfType<Board>();
-        board.Setup();
-
-        CreateAndPlacePieces();
-    }
-
-    void CreateAndPlacePieces()
-    {
         var board = FindObjectOfType<Board>();
         var firstRow = new Type[] { typeof(Rook), typeof(Knight), typeof(Bishop), typeof(Queen), typeof(King), typeof(Bishop), typeof(Knight), typeof(Rook) };
         for (int i = 0; i < firstRow.Length; i++)
@@ -45,6 +33,7 @@ public class GameManager : MonoBehaviour
         {
             CreateAndPlacePiece(typeof(Pawn), false, board.GetCell(i, Board.WIDTH - 2));
         }
+        whoseTurn = true;
     }
 
     void CreateAndPlacePiece(Type type, bool team, Cell cell)
@@ -53,5 +42,14 @@ public class GameManager : MonoBehaviour
         piece.AddComponent(type);
         (piece.GetComponent(type) as Piece).Setup(team);
         (piece.GetComponent(type) as Piece).Place(cell);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        var board = FindObjectOfType<Board>();
+        board.Setup();
+
+        Reset();
     }
 }

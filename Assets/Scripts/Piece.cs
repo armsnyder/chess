@@ -28,7 +28,6 @@ public abstract class Piece : MonoBehaviour
         if (_cell)
         {
             _cell.piece = null;
-            _hasMoved = true;
         }
         if (cell.piece)
         {
@@ -64,11 +63,13 @@ public abstract class Piece : MonoBehaviour
 
     void BeginDrag()
     {
-        _isDragging = true;
-        _grabOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.position += new Vector3(0, 0, -1);
-        Cursor.visible = false;
-        _curPotentialMoves = ValidMoves();
+        if (_team == FindObjectOfType<GameManager>().whoseTurn) {
+            _isDragging = true;
+            _grabOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position += new Vector3(0, 0, -1);
+            Cursor.visible = false;
+            _curPotentialMoves = ValidMoves();
+        }
     }
 
     void EndDrag()
@@ -81,6 +82,8 @@ public abstract class Piece : MonoBehaviour
         if (CanPlace(targetCell))
         {
             Place(targetCell);
+            _hasMoved = true;
+            FindObjectOfType<GameManager>().whoseTurn ^= true;
         }
         else
         {

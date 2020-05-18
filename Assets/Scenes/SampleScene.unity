@@ -261,6 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _piecePrefab: {fileID: 2514212035563535506, guid: dbbf43092b62643df802d730553e8778,
     type: 3}
+  whoseTurn: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
