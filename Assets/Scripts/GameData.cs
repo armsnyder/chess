@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
-    bool whoseTurn;
-    List<PieceData> pieces;
+    public bool whoseTurn;
+    public List<PieceData> pieces;
 
     public GameData(Board board)
     {

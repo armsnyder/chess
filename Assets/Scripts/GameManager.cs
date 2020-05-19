@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
         board.Setup();
 
         Reset();
+        StartCoroutine(SaveGame.Save(board));
     }
 
 

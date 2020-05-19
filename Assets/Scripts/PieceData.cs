@@ -5,11 +5,11 @@ using UnityEngine;
 [System.Serializable]
 public class PieceData
 {
-    bool team;
-    bool hasMoved;
-    string pieceType;
-    int x;
-    int y;
+    public bool team;
+    public bool hasMoved;
+    public string pieceType;
+    public int x;
+    public int y;
 
     public PieceData(Piece piece)
     {
