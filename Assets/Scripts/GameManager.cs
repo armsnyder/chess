@@ -37,6 +37,12 @@ public class GameManager : MonoBehaviour
         board.whoseTurn = true;
     }
 
+    public void Save()
+    {
+        var board = FindObjectOfType<Board>();
+        StartCoroutine(SaveGame.Save(board));
+    }
+
     void CreateAndPlacePiece(Type type, bool team, Cell cell)
     {
         var piece = Instantiate<GameObject>(_piecePrefab);
@@ -52,8 +58,5 @@ public class GameManager : MonoBehaviour
         board.Setup();
 
         Reset();
-        StartCoroutine(SaveGame.Save(board));
     }
-
-
 }

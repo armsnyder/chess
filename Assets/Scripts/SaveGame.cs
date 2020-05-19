@@ -23,4 +23,10 @@ public static class SaveGame
             Debug.Log("didn't see an error");
         }
     }
+
+    public static void Load(GameData state)
+    {
+        // TODO load game from dynamo game state
+        return;
+    }
 }
