@@ -6,20 +6,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject _piecePrefab = null;
 
-    public bool whoseTurn;
-
-    public static event Action<bool> GameOver;
-
-    public void NextTurn() {
-        whoseTurn ^= true;
-        if (IsGameOver()) {
-            if (GameOver != null) {
-                GameOver(!whoseTurn);
-            }
-        }
-        // whoseTurn ^= true;  // debug
-    }
-
     public void Reset()
     {
         foreach (var piece in FindObjectsOfType<Piece>())
@@ -27,7 +13,9 @@ public class GameManager : MonoBehaviour
             Destroy(piece.gameObject);
         }
         var board = FindObjectOfType<Board>();
+
         var firstRow = new Type[] { typeof(Rook), typeof(Knight), typeof(Bishop), typeof(Queen), typeof(King), typeof(Bishop), typeof(Knight), typeof(Rook) };
+
         for (int i = 0; i < firstRow.Length; i++)
         {
             CreateAndPlacePiece(firstRow[i], true, board.GetCell(i, 0));
@@ -45,7 +33,8 @@ public class GameManager : MonoBehaviour
         {
             CreateAndPlacePiece(typeof(Pawn), false, board.GetCell(i, Board.WIDTH - 2));
         }
-        whoseTurn = true;
+
+        board.whoseTurn = true;
     }
 
     void CreateAndPlacePiece(Type type, bool team, Cell cell)
@@ -65,12 +54,5 @@ public class GameManager : MonoBehaviour
         Reset();
     }
 
-    bool IsGameOver() {
-        foreach (var p in FindObjectsOfType<Piece>()) {
-            if (p.team == whoseTurn && p.HasMoves() && p.enabled) {
-                return false;
-            }
-        }
-        return true;
-    }
+
 }

@@ -1,12 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Board : MonoBehaviour
 {
     [SerializeField]
     GameObject _cellPrefab = null;
     Cell[,] _cells;
+    public Cell[,] cells { get { return _cells; } }
+    public bool whoseTurn;
     public const int WIDTH = 8;
 
+    public static event Action<bool> GameOver;
+
+    public void NextTurn()
+    {
+        whoseTurn ^= true;
+        if (IsGameOver())
+        {
+            if (GameOver != null)
+            {
+                GameOver(!whoseTurn);
+            }
+        }
+        // whoseTurn ^= true;  // debug
+    }
     public Cell GetCell(int x, int y)
     {
         if (x < 0 || x >= WIDTH || y < 0 || y >= WIDTH)
@@ -46,5 +63,16 @@ public class Board : MonoBehaviour
                 Gizmos.DrawCube(transform.position + new Vector3(x + 0.5f, y + 0.5f, 0), new Vector3(1, 1, 0));
             }
         }
+    }
+    bool IsGameOver()
+    {
+        foreach (var p in FindObjectsOfType<Piece>())
+        {
+            if (p.team == whoseTurn && p.HasMoves() && p.enabled)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

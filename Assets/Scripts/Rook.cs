@@ -2,7 +2,7 @@
 
 public class Rook : Piece
 {
-    protected override string SpriteName { get { return "Rook"; } }
+    public override string SpriteName { get { return "Rook"; } }
 
     protected override Vector3Int[] MoveSet
     {

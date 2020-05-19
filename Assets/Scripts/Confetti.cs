@@ -6,6 +6,7 @@ public class Confetti : MonoBehaviour
 {
     [SerializeField]
     GameObject _confettPrefab = null;
+
     void OnGameOver(bool team)
     {
         Instantiate<GameObject>(_confettPrefab, transform);
@@ -13,11 +14,11 @@ public class Confetti : MonoBehaviour
 
     void OnEnable()
     {
-        GameManager.GameOver += OnGameOver;
+        Board.GameOver += OnGameOver;
     }
 
     void OnDisable()
     {
-        GameManager.GameOver -= OnGameOver;
+        Board.GameOver -= OnGameOver;
     }
 }

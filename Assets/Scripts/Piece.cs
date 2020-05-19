@@ -4,12 +4,14 @@ using UnityEngine;
 public abstract class Piece : MonoBehaviour
 {
     Cell _cell;
+    public Cell cell { get { return _cell; } }
     bool _isDragging;
     Vector3 _grabOffset;
     bool _team;
     public bool team { get { return _team; } }
     List<Cell> _curPotentialMoves;
     bool _hasMoved;
+    public bool hasMoved { get { return _hasMoved; } }
 
     protected const int MOVE = 1;
     protected const int CAPTURE = 1 << 1;
@@ -43,7 +45,7 @@ public abstract class Piece : MonoBehaviour
     {
         return ValidMoves().Count > 0;
     }
-    protected abstract string SpriteName { get; }
+    public abstract string SpriteName { get; }
 
     protected abstract Vector3Int[] MoveSet { get; }
 
@@ -68,7 +70,7 @@ public abstract class Piece : MonoBehaviour
 
     void BeginDrag()
     {
-        if (_team == FindObjectOfType<GameManager>().whoseTurn)
+        if (_team == FindObjectOfType<Board>().whoseTurn)
         {
             _isDragging = true;
             _grabOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -89,7 +91,7 @@ public abstract class Piece : MonoBehaviour
         {
             Place(targetCell);
             _hasMoved = true;
-            FindObjectOfType<GameManager>().NextTurn();
+            FindObjectOfType<Board>().NextTurn();
         }
         else
         {
