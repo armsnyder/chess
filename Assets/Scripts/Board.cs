@@ -1,11 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Board : MonoBehaviour
 {
     [SerializeField]
     GameObject _cellPrefab = null;
+    [SerializeField]
+    GameObject _piecePrefab = null;
     Cell[,] _cells;
+
+    Dictionary<string, Type> _typeMap = new Dictionary<string, Type>()
+    {
+        {"Rook",typeof(Rook)},
+        {"Pawn",typeof(Pawn)},
+        {"Knight",typeof(Knight)},
+        {"Queen",typeof(Queen)},
+        {"King",typeof(King)},
+        {"Bishop",typeof(Bishop)},
+    };
+
     public Cell[,] cells { get { return _cells; } }
     public bool whoseTurn;
     public const int WIDTH = 8;
@@ -74,5 +88,26 @@ public class Board : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void ClearPieces()
+    {
+        foreach (var piece in FindObjectsOfType<Piece>())
+        {
+            Destroy(piece.gameObject);
+        }
+    }
+
+    public void CreateAndPlacePiece(Type type, bool team, Cell cell, bool hasMoved = false)
+    {
+        var piece = Instantiate<GameObject>(_piecePrefab);
+        piece.AddComponent(type);
+        (piece.GetComponent(type) as Piece).Setup(team, hasMoved);
+        (piece.GetComponent(type) as Piece).Place(cell);
+    }
+
+    public void CreateAndPlacePiece(String type, bool team, Cell cell, bool hasMoved)
+    {
+        CreateAndPlacePiece(_typeMap[type], team, cell, hasMoved);
     }
 }

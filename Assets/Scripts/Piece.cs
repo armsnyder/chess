@@ -19,9 +19,10 @@ public abstract class Piece : MonoBehaviour
     protected const int SPECIAL = 1 << 3;
 
 
-    public void Setup(bool team)
+    public void Setup(bool team, bool hasMoved)
     {
         this._team = team;
+        this._hasMoved = hasMoved;
         GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>((team ? "White" : "Black") + SpriteName);
     }
 
