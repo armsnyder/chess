@@ -36,6 +36,7 @@ public class Board : MonoBehaviour
                 GameOver(!whoseTurn);
             }
         }
+        FindObjectOfType<GameManager>().Save();
         // whoseTurn ^= true;  // debug
     }
     public Cell GetCell(int x, int y)
