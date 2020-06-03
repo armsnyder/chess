@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 1068092190}
   - component: {fileID: 1068092189}
   m_Layer: 5
-  m_Name: New Game Button (1)
+  m_Name: Load Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -984,7 +984,7 @@ GameObject:
   - component: {fileID: 1906384276}
   - component: {fileID: 1906384275}
   m_Layer: 5
-  m_Name: New Game Button
+  m_Name: Save Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
