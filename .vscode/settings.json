@@ -1,4 +1,6 @@
 ﻿{
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
     "files.exclude":
     {
         "**/.DS_Store":true,
